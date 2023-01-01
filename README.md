@@ -17,7 +17,7 @@ Accept: application/json
 {
   "sender": {
     "latitude": 1.234,
-    "longitude: 1.234
+    "longitude": 1.234
   },
   "recipient": {
     "latitude": 1.234,
@@ -75,7 +75,7 @@ Accept: application/json
     "postal_code": "string",
     "coordinate": {
       "latitude": 1.234,
-      "longitude: 1.234
+      "longitude": 1.234
     }
   },
   "recipient": {
@@ -88,7 +88,7 @@ Accept: application/json
     "postal_code": "string",
     "coordinate": {
       "latitude": 1.234,
-      "longitude: 1.234
+      "longitude": 1.234
     }
   },
   "dimension": {
