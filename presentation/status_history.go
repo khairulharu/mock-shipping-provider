@@ -2,6 +2,6 @@ package presentation
 
 import "net/http"
 
-func (d *Dependency) StatusHistoryHandler(w http.ResponseWriter, r *http.Request) {
+func (p *Presenter) StatusHistoryHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO
 }

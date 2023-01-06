@@ -2,6 +2,6 @@ package presentation
 
 import "net/http"
 
-func (d *Dependency) EstimateHandler(w http.ResponseWriter, r *http.Request) {
+func (p *Presenter) EstimateHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO!
 }

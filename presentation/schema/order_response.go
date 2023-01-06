@@ -8,5 +8,5 @@ type OrderResponse struct {
 	ReferenceNumber      string           `json:"reference_number"`
 	AirWaybill           string           `json:"air_waybill"`
 	Price                int64            `json:"price"`
-	EstimatedHourArrival int64            `json:"estimated_hour_arrival"`
+	EstimatedHourArrival uint64           `json:"estimated_hour_arrival"`
 }
