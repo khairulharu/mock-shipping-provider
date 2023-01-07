@@ -15,13 +15,7 @@ type Dependency struct {
 }
 
 // TODO: move these into different file and implement them
-
-func (d *Dependency) Estimate(ctx context.Context, request business.EstimateRequest) (business.EstimateResult, error) {
-	// TODO implement me
-	panic("implement me")
-}
-
-func (d *Dependency) StatusHistory(ctx context.Context, request business.StatusRequest) ([]business.StatusHistoryResponse, error) {
+func (d *Dependency) StatusHistory(ctx context.Context, request business.StatusRequest) (business.StatusHistoryResponse, error) {
 	// TODO implement me
 	panic("implement me")
 }
