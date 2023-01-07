@@ -10,3 +10,6 @@ type Address struct {
 	PostalCode  string     `json:"postal_code"`
 	Coordinate  Coordinate `json:"coordinate"`
 }
+
+var AddressNamePattern = `\w+`
+var AddressPhoneNumbePattern = `^\+\d+$`
