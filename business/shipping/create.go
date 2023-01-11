@@ -20,7 +20,7 @@ func (d *Dependency) Create(ctx context.Context, request business.CreateRequest)
 	panic("implement me")
 }
 
-func ValidateCreateRequest(request business.CreateRequest) error {
+func ValidateCreateRequest(request business.CreateRequest) *business.RequestValidationError {
 	var issues []business.RequestValidationIssue
 
 	// Provider
@@ -37,7 +37,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "sender.name",
-			Message: "sender.name is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Sender.Name) < 5 {
@@ -70,7 +70,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "sender.phone_number",
-			Message: "sender.phone_number is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Sender.PhoneNumber) >= 20 {
@@ -95,7 +95,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "sender.address",
-			Message: "sender.address is required",
+			Message: "can not be empty",
 		})
 
 	} else {
@@ -122,14 +122,14 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "sender.city",
-			Message: "sender.city is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Sender.City) > 500 {
 			issues = append(issues, business.RequestValidationIssue{
 				Code:    business.RequestValidationCodeTooLong,
 				Field:   "sender.city",
-				Message: "maximum of 500 characters",
+				Message: "can not be empty",
 			})
 		}
 	}
@@ -157,7 +157,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "sender.country",
-			Message: "sender.country is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Sender.Country) > 255 {
@@ -174,7 +174,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "sender.postal_code",
-			Message: "sender.postal_code is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Sender.PostalCode) > 10 {
@@ -199,7 +199,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "recipient.name",
-			Message: "recipient.name is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Recipient.Name) < 5 {
@@ -232,7 +232,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "recipient.phone_number",
-			Message: "recipient.phone_number is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Recipient.PhoneNumber) >= 20 {
@@ -257,7 +257,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "recipient.address",
-			Message: "recipient.address is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Recipient.Address) > 500 {
@@ -282,7 +282,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "recipient.city",
-			Message: "recipient.city is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Recipient.City) > 500 {
@@ -299,7 +299,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "recipient.state",
-			Message: "recipient.state is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Recipient.State) > 255 {
@@ -316,7 +316,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "recipient.country",
-			Message: "recipient.country is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Recipient.Country) > 255 {
@@ -333,7 +333,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "recipient.postal_code",
-			Message: "recipient.postal_code is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.Recipient.PostalCode) > 10 {
@@ -395,7 +395,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 		issues = append(issues, business.RequestValidationIssue{
 			Code:    business.RequestValidationCodeRequired,
 			Field:   "item_category",
-			Message: "item_category is required",
+			Message: "can not be empty",
 		})
 	} else {
 		if len(request.ItemCategory) > 500 {
@@ -408,7 +408,7 @@ func ValidateCreateRequest(request business.CreateRequest) error {
 	}
 
 	if len(issues) > 0 {
-		return business.RequestValidationError{Issues: issues}
+		return &business.RequestValidationError{Issues: issues}
 	}
 
 	return nil
