@@ -40,7 +40,7 @@ type EstimateResult struct {
 	Hours    uint64
 }
 
-// OrderRequest holds the order request
+// CreateRequest holds the order request
 // data coming from the presentation layer
 type CreateRequest struct {
 	Provider        primitive.Provider

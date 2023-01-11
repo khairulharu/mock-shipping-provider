@@ -2,10 +2,6 @@ package primitive
 
 import "errors"
 
-var HeightIsLowerThanZero = errors.New("height is lower than 0")
-var WidthIsLowerThanZero = errors.New("width is lower than 0")
-var DepthIsLowerThanZero = errors.New("depth is lower than 0")
-
 // Dimension specifies the dimension of an object.
 // Every field represent the length in centimeters.
 type Dimension struct {
@@ -18,15 +14,15 @@ type Dimension struct {
 // is lower than zero.
 func (d Dimension) Validate() error {
 	if d.Height < 0 {
-		return HeightIsLowerThanZero
+		return errors.New("height is lower than 0")
 	}
 
 	if d.Width < 0 {
-		return WidthIsLowerThanZero
+		return errors.New("width is lower than 0")
 	}
 
 	if d.Depth < 0 {
-		return DepthIsLowerThanZero
+		return errors.New("depth is lower than 0")
 	}
 
 	return nil
