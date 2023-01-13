@@ -22,8 +22,8 @@ func TestValidateCreateRequest(t *testing.T) {
 			Country:     "Indonesia",
 			PostalCode:  "55281",
 			Coordinate: primitive.Coordinate{
-				Latitude:  -1234567889,
-				Longitude: 1234556789,
+				Latitude:  -7.7584860436179435,
+				Longitude: 110.39994530243902,
 			},
 		},
 		Recipient: primitive.Address{
@@ -35,8 +35,8 @@ func TestValidateCreateRequest(t *testing.T) {
 			Country:     "Indonesia",
 			PostalCode:  "55281",
 			Coordinate: primitive.Coordinate{
-				Latitude:  -12345678,
-				Longitude: 1234567,
+				Latitude:  -7.7584860436179435,
+				Longitude: 110.39994530243902,
 			},
 		},
 		Dimension: primitive.Dimension{

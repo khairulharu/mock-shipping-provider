@@ -12,12 +12,12 @@ func TestValidateEstimateRequest(t *testing.T) {
 	// create example of valid request
 	request := business.EstimateRequest{
 		Sender: primitive.Coordinate{
-			Latitude:  -123456789,
-			Longitude: 123456789,
+			Latitude:  -7.7584860436179435,
+			Longitude: 110.39994530243902,
 		},
 		Recipient: primitive.Coordinate{
-			Latitude:  -12345678,
-			Longitude: 12345678,
+			Latitude:  -7.7584860436179435,
+			Longitude: 110.39994530243902,
 		},
 		Dimension: primitive.Dimension{
 			Height: 10,
