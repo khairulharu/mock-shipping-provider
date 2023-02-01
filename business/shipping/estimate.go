@@ -23,6 +23,22 @@ func ValidateEstimateRequest(request business.EstimateRequest) *business.Request
 			Field:   "sender",
 			Message: "can not be empty",
 		})
+	} else {
+		if request.Sender.Latitude < -90 || request.Sender.Latitude > 90 {
+			issues = append(issues, business.RequestValidationIssue{
+				Code:    business.RequestValidationCodeInvalidValue,
+				Field:   "sender.latitude",
+				Message: "must be between -90 and 90",
+			})
+		}
+
+		if request.Sender.Longitude < -180 || request.Sender.Longitude > 180 {
+			issues = append(issues, business.RequestValidationIssue{
+				Code:    business.RequestValidationCodeInvalidValue,
+				Field:   "sender.longitude",
+				Message: "must be between -180 and 180",
+			})
+		}
 	}
 
 	// Recipient
@@ -32,6 +48,22 @@ func ValidateEstimateRequest(request business.EstimateRequest) *business.Request
 			Field:   "recipient",
 			Message: "can not be empty",
 		})
+	} else {
+		if request.Recipient.Latitude < -90 || request.Recipient.Latitude > 90 {
+			issues = append(issues, business.RequestValidationIssue{
+				Code:    business.RequestValidationCodeInvalidValue,
+				Field:   "recipient.latitude",
+				Message: "must be between -90 and 90",
+			})
+		}
+
+		if request.Recipient.Longitude < -180 || request.Recipient.Longitude > 180 {
+			issues = append(issues, business.RequestValidationIssue{
+				Code:    business.RequestValidationCodeInvalidValue,
+				Field:   "recipient.longitude",
+				Message: "must be between -180 and 180",
+			})
+		}
 	}
 
 	// Dimension

@@ -36,7 +36,7 @@ func TestValidateEstimateRequest(t *testing.T) {
 	})
 
 	// test Sender
-	t.Run("Sender", func(t *testing.T) {
+	t.Run("Sender.latitude", func(t *testing.T) {
 		// arrange
 		mock := request
 		var requestValidationError *business.RequestValidationError
@@ -53,6 +53,60 @@ func TestValidateEstimateRequest(t *testing.T) {
 			if !errors.As(err, &requestValidationError) {
 				t.Errorf("expect error as *business.RequestValidationError"+
 					" when the given sender is empty object, but got %T instead", err)
+			}
+		})
+
+		t.Run("given latitude is invalid", func(t *testing.T) {
+			mock.Sender.Latitude = 91
+			err := shipping.ValidateEstimateRequest(mock)
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given latitude is invalid, but got nil instead")
+			}
+
+			mock.Sender.Latitude = -91
+			err = shipping.ValidateEstimateRequest(mock)
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given latitude is invalid, but got nil instead")
+			}
+		})
+	})
+
+	// test Sender.longitude
+	t.Run("Sender.longitude", func(t *testing.T) {
+		// arrange
+		mock := request
+		var requestValidationError *business.RequestValidationError
+
+		t.Run("required", func(t *testing.T) {
+			mock.Sender = primitive.Coordinate{}
+
+			err := shipping.ValidateEstimateRequest(mock)
+
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given sender is empty object, but got nil instead")
+			}
+			if !errors.As(err, &requestValidationError) {
+				t.Errorf("expect error as *business.RequestValidationError"+
+					" when the given sender is empty object, but got %T instead", err)
+			}
+		})
+
+		t.Run("given longitude is invalid", func(t *testing.T) {
+			mock.Sender.Longitude = 181
+			err := shipping.ValidateEstimateRequest(mock)
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given longitude is invalid, but got nil instead")
+			}
+
+			mock.Sender.Longitude = -181
+			err = shipping.ValidateEstimateRequest(mock)
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given longitude is invalid, but got nil instead")
 			}
 		})
 	})
@@ -75,6 +129,82 @@ func TestValidateEstimateRequest(t *testing.T) {
 			if !errors.As(err, &requestValidationError) {
 				t.Errorf("expect error as *business.RequestValidationError"+
 					" when the given recipient is empty object, but got %T instead", err)
+			}
+		})
+	})
+
+	// test Recipient.latitude
+	t.Run("Recipient.latitude", func(t *testing.T) {
+		// arrange
+		mock := request
+		var requestValidationError *business.RequestValidationError
+
+		t.Run("required", func(t *testing.T) {
+			mock.Recipient = primitive.Coordinate{}
+
+			err := shipping.ValidateEstimateRequest(mock)
+
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given recipient is empty object, but got nil instead")
+			}
+			if !errors.As(err, &requestValidationError) {
+				t.Errorf("expect error as *business.RequestValidationError"+
+					" when the given recipient is empty object, but got %T instead", err)
+			}
+		})
+
+		t.Run("given latitude is invalid", func(t *testing.T) {
+			mock.Recipient.Latitude = 91
+			err := shipping.ValidateEstimateRequest(mock)
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given latitude is invalid, but got nil instead")
+			}
+
+			mock.Recipient.Latitude = -91
+			err = shipping.ValidateEstimateRequest(mock)
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given latitude is invalid, but got nil instead")
+			}
+		})
+	})
+
+	// test Recipient.longitude
+	t.Run("Recipient.longitude", func(t *testing.T) {
+		// arrange
+		mock := request
+		var requestValidationError *business.RequestValidationError
+
+		t.Run("required", func(t *testing.T) {
+			mock.Recipient = primitive.Coordinate{}
+
+			err := shipping.ValidateEstimateRequest(mock)
+
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given recipient is empty object, but got nil instead")
+			}
+			if !errors.As(err, &requestValidationError) {
+				t.Errorf("expect error as *business.RequestValidationError"+
+					" when the given recipient is empty object, but got %T instead", err)
+			}
+		})
+
+		t.Run("given longitude is invalid", func(t *testing.T) {
+			mock.Recipient.Longitude = 181
+			err := shipping.ValidateEstimateRequest(mock)
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given longitude is invalid, but got nil instead")
+			}
+
+			mock.Recipient.Longitude = -181
+			err = shipping.ValidateEstimateRequest(mock)
+			if err == nil {
+				t.Errorf("expect error" +
+					" when the given longitude is invalid, but got nil instead")
 			}
 		})
 	})
