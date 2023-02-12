@@ -1,5 +1,7 @@
 package primitive
 
+import "regexp"
+
 type Address struct {
 	Name        string     `json:"name"`
 	PhoneNumber string     `json:"phone_number"`
@@ -10,3 +12,6 @@ type Address struct {
 	PostalCode  string     `json:"postal_code"`
 	Coordinate  Coordinate `json:"coordinate"`
 }
+
+var AddressNamePattern = regexp.MustCompile(`[\w\s]+`)
+var AddressPhoneNumberPattern = regexp.MustCompile(`^\+\d+$`)

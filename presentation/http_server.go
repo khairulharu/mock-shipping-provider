@@ -2,6 +2,7 @@ package presentation
 
 import (
 	"crypto/tls"
+	"mock-shipping-provider/business"
 	"net"
 	"net/http"
 	"time"
@@ -9,7 +10,13 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-type Dependency struct{}
+type Presenter struct {
+	shippingService business.Shipping
+}
+
+type Dependency struct {
+	ShippingService business.Shipping
+}
 
 type Config struct {
 	Hostname  string
@@ -21,10 +28,13 @@ type Config struct {
 
 func NewHttpServer(config Config) (*http.Server, error) {
 	router := chi.NewRouter()
+	presenter := Presenter{
+		shippingService: config.Dependency.ShippingService,
+	}
 
-	router.Post("/estimate", config.Dependency.EstimateHandler)
-	router.Post("/order", config.Dependency.OrderHandler)
-	router.Get("/status-history", config.Dependency.StatusHistoryHandler)
+	router.Post("/estimate", presenter.EstimateHandler)
+	router.Post("/order", presenter.OrderHandler)
+	router.Get("/status-history", presenter.StatusHistoryHandler)
 
 	server := &http.Server{
 		Addr:              net.JoinHostPort(config.Hostname, config.Port),
