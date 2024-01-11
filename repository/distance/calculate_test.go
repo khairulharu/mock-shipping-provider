@@ -2,7 +2,6 @@ package distance_test
 
 import (
 	"mock-shipping-provider/primitive"
-	"mock-shipping-provider/repository"
 	"mock-shipping-provider/repository/distance"
 	"testing"
 )
@@ -28,15 +27,17 @@ func TestDistanceCalculation(t *testing.T) {
 		Longitude: 120.3146973,
 	}
 
+	distanceCalculation := distance.NewCalculateDistance()
+
 	t.Run("test distance not service", func(t *testing.T) {
-		distance, serviceable := repository.DistanceCalculation.Calculate(&distance.Calculate{}, from, to)
+		distance, serviceable := distanceCalculation.Calculate(from, to)
 		if !serviceable {
-			t.Logf("servicable: %v", distance)
+			t.Logf("not servicable: %v", distance)
 		}
 	})
 
 	t.Run("test distance serviceable", func(t *testing.T) {
-		distance, serviceable := repository.DistanceCalculation.Calculate(&distance.Calculate{}, fromA, toA)
+		distance, serviceable := distanceCalculation.Calculate(fromA, toA)
 		if serviceable {
 			t.Logf("servicable: %v", distance)
 		}
