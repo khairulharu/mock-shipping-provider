@@ -14,7 +14,7 @@ type CalculateDistance struct {
 func NewCalculateDistance() repository.DistanceCalculation {
 	return &CalculateDistance{
 		Radius:             6371.0,
-		ServicableDistance: 5.100,
+		ServicableDistance: 5245.0,
 	}
 }
 
@@ -36,8 +36,8 @@ func (c *CalculateDistance) Calculate(from primitive.Coordinate, to primitive.Co
 	distanceCalculation := c.Radius * cal
 
 	if distanceCalculation > c.ServicableDistance {
-		return distance, false
+		return distanceCalculation, false
 	}
 
-	return distance, true
+	return distanceCalculation, true
 }
