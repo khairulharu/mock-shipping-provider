@@ -19,9 +19,6 @@ func NewCalculateDistance() repository.DistanceCalculation {
 }
 
 func (c *CalculateDistance) Calculate(from primitive.Coordinate, to primitive.Coordinate) (distance float64, serviceable bool) {
-	// R := 6371.0
-	// serviceableDistance := 5.100
-
 	lat1Rad := from.Latitude * math.Pi / 180
 	lon1Rad := from.Longitude * math.Pi / 180
 	lat2Rad := to.Latitude * math.Pi / 180
