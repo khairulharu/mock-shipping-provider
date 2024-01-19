@@ -23,9 +23,20 @@ func (jne *JNE) CalculatePrice(distance float64, dimension primitive.Dimension, 
 
 	volume := dimension.Width * dimension.Height * dimension.Depth
 
-	return (int64(distance) / jne.KmPerDistance) * int64(volume)
+	var hops int64
+
+	if distance < float64(jne.KmPerDistance) {
+		hops = 1
+	} else {
+		hops = (int64(distance) / jne.KmPerDistance)
+	}
+
+	return (jne.Price * hops) * int64(volume)
 }
 
 func (jne *JNE) CalculateTimeOfArrival(distance float64) int64 {
+	if distance < float64(jne.HourPerDistance) {
+		return 1
+	}
 	return int64(distance / float64(jne.HourPerDistance))
 }

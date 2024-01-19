@@ -6,19 +6,15 @@ import (
 	"testing"
 )
 
-func createCalculation(t *testing.T, disatance float64, dimension primitive.Dimension, weight float64) int64 {
+func createJneCalculation(t *testing.T, distance float64, dimension primitive.Dimension, weight float64) int64 {
 	JNE := provider.NewJneCalculation()
 
-	result := JNE.CalculatePrice(disatance, primitive.Dimension{
-		Width:  dimension.Width,
-		Height: dimension.Height,
-		Depth:  dimension.Depth,
-	}, weight)
+	result := JNE.CalculatePrice(distance, dimension, weight)
 
 	return result
 }
 
-func createTimeArrival(t *testing.T, distance float64) int64 {
+func createJneTimeArrival(t *testing.T, distance float64) int64 {
 	JNE := provider.NewJneCalculation()
 
 	result := JNE.CalculateTimeOfArrival(distance)
@@ -26,8 +22,8 @@ func createTimeArrival(t *testing.T, distance float64) int64 {
 	return result
 }
 
-func TestCalculate(t *testing.T) {
-	var distanceTest float64 = 300
+func TestProviderJne(t *testing.T) {
+	distanceTest := 300.0
 
 	dimensionTest := primitive.Dimension{
 		Width:  30,
@@ -35,31 +31,27 @@ func TestCalculate(t *testing.T) {
 		Depth:  20,
 	}
 
-	t.Run("test calculate", func(t *testing.T) {
+	t.Run("test calculate price", func(t *testing.T) {
 		JNE := provider.NewJneCalculation()
 
-		result := JNE.CalculatePrice(float64(distanceTest), primitive.Dimension{
-			Width:  dimensionTest.Width,
-			Height: dimensionTest.Height,
-			Depth:  dimensionTest.Depth,
-		}, 0)
+		result := JNE.CalculatePrice(float64(distanceTest), dimensionTest, 0)
 
-		resultOfCalculation := createCalculation(t, distanceTest, dimensionTest, 0)
+		resultOfCalculation := createJneCalculation(t, distanceTest, dimensionTest, 0)
 
 		if result != resultOfCalculation {
-			t.Errorf("must be not error get: %v Rp", result)
+			t.Errorf("must be no error, but get: %v Rp", result)
 		}
 	})
 
-	t.Run("test for time of arrival", func(t *testing.T) {
+	t.Run("test time of arrival", func(t *testing.T) {
 		JNE := provider.NewJneCalculation()
 
 		time := JNE.CalculateTimeOfArrival(distanceTest)
 
-		resultOfTime := createTimeArrival(t, distanceTest)
+		resultOfTime := createJneTimeArrival(t, distanceTest)
 
 		if time != resultOfTime {
-			t.Errorf("must error because time arrival is : %v hours ", time)
+			t.Errorf("error get time arrival is : %v hours ", time)
 		}
 	})
 }
