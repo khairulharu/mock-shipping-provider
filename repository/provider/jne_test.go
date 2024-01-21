@@ -3,6 +3,7 @@ package provider_test
 import (
 	"mock-shipping-provider/primitive"
 	"mock-shipping-provider/repository/provider"
+	"reflect"
 	"testing"
 )
 
@@ -23,35 +24,44 @@ func createJneTimeArrival(t *testing.T, distance float64) int64 {
 }
 
 func TestProviderJne(t *testing.T) {
-	distanceTest := 300.0
-
-	dimensionTest := primitive.Dimension{
-		Width:  30,
-		Height: 60,
-		Depth:  20,
+	testCases := []struct {
+		distance  float64
+		dimension primitive.Dimension
+		weight    float64
+	}{
+		{distance: 4500.0},
+		{dimension: primitive.Dimension{
+			Width:  30,
+			Height: 20,
+			Depth:  30,
+		}},
+		{weight: 45},
 	}
 
-	t.Run("test calculate price", func(t *testing.T) {
-		JNE := provider.NewJneCalculation()
+	for _, testcase := range testCases {
+		t.Run("test calculate price", func(t *testing.T) {
+			JNE := provider.NewJneCalculation()
 
-		result := JNE.CalculatePrice(float64(distanceTest), dimensionTest, 0)
+			result := JNE.CalculatePrice(float64(testcase.distance), testcase.dimension, testcase.weight)
 
-		resultOfCalculation := createJneCalculation(t, distanceTest, dimensionTest, 0)
+			expectedPrice := createJneCalculation(t, testcase.distance, testcase.dimension, testcase.weight)
 
-		if result != resultOfCalculation {
-			t.Errorf("must be no error, but get: %v Rp", result)
-		}
-	})
+			if reflect.DeepEqual(result, expectedPrice) == false {
+				t.Errorf("must not error but get %v and %v different price meaning code error", result, expectedPrice)
+			}
+		})
+	}
+	for _, testCase := range testCases {
+		t.Run("test time of arrival", func(t *testing.T) {
+			JNE := provider.NewJneCalculation()
 
-	t.Run("test time of arrival", func(t *testing.T) {
-		JNE := provider.NewJneCalculation()
+			time := JNE.CalculateTimeOfArrival(testCase.distance)
 
-		time := JNE.CalculateTimeOfArrival(distanceTest)
+			expectedTime := createJneTimeArrival(t, testCase.distance)
 
-		resultOfTime := createJneTimeArrival(t, distanceTest)
-
-		if time != resultOfTime {
-			t.Errorf("error get time arrival is : %v hours ", time)
-		}
-	})
+			if reflect.DeepEqual(time, expectedTime) == false {
+				t.Errorf("error get time arrival is : %v hours ", time)
+			}
+		})
+	}
 }
