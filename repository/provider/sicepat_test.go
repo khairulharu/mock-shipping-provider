@@ -3,15 +3,24 @@ package provider_test
 import (
 	"mock-shipping-provider/primitive"
 	"mock-shipping-provider/repository/provider"
+	"reflect"
 	"testing"
 )
 
-func createSicepatCalculation(t *testing.T, distance float64, dimension primitive.Dimension, weight float64) int64 {
-	Sicepat := provider.NewSicepatCalculation(provider.Sicepat{
-		Price:           20000,
-		HourPerDistance: 200,
-		KmPerDistance:   300,
-	})
+func newSicepatRate() primitive.Rate {
+	return primitive.Rate{
+		PerKilogram:      1000,
+		PerKilometer:     1200,
+		PerCmCubic:       900,
+		KilometerPerHour: 60,
+	}
+}
+
+func createSicepatPriceCalculation(t *testing.T, distance float64, dimension primitive.Dimension, weight float64) int64 {
+
+	sicepatRate := newSicepatRate()
+
+	Sicepat := provider.NewSicepatCalculation(&sicepatRate)
 
 	result := Sicepat.CalculatePrice(distance, dimension, weight)
 
@@ -19,11 +28,10 @@ func createSicepatCalculation(t *testing.T, distance float64, dimension primitiv
 }
 
 func createSicepatTimeArrival(t *testing.T, distance float64) int64 {
-	Sicepat := provider.NewSicepatCalculation(provider.Sicepat{
-		Price:           20000,
-		HourPerDistance: 200,
-		KmPerDistance:   300,
-	})
+
+	sicepatRate := newSicepatRate()
+
+	Sicepat := provider.NewSicepatCalculation(&sicepatRate)
 
 	result := Sicepat.CalculateTimeOfArrival(distance)
 
@@ -31,58 +39,53 @@ func createSicepatTimeArrival(t *testing.T, distance float64) int64 {
 }
 
 func TestProviderSicepat(t *testing.T) {
-	distanceTest := 4500.0
-	dimensionTest := primitive.Dimension{
-		Width:  30,
-		Height: 50,
-		Depth:  40,
+	sicepatRate := newSicepatRate()
+
+	Sicepat := provider.NewSicepatCalculation(&sicepatRate)
+
+	testCases := []struct {
+		distance  float64
+		dimension primitive.Dimension
+		weight    float64
+	}{
+		{distance: 300},
+		{dimension: primitive.Dimension{
+			Width:  30,
+			Height: 10,
+			Depth:  11,
+		}},
+		{weight: 40},
 	}
 
-	t.Run("test calculate price", func(t *testing.T) {
-		Sicepat := provider.NewSicepatCalculation(provider.Sicepat{
-			Price:           20000,
-			HourPerDistance: 200,
-			KmPerDistance:   300,
+	for _, testCase := range testCases {
+		t.Run("test calculate price", func(t *testing.T) {
+			result := Sicepat.CalculatePrice(testCase.distance, testCase.dimension, testCase.weight)
+
+			expectedResult := createSicepatPriceCalculation(t, testCase.distance, testCase.dimension, testCase.weight)
+			if reflect.DeepEqual(result, expectedResult) == false {
+				t.Errorf("must not error but get %v and %v different price meaning code error", result, expectedResult)
+			}
 		})
+	}
 
-		result := Sicepat.CalculatePrice(20, dimensionTest, 0)
+	for _, testCase := range testCases {
+		t.Run("test time of arrival", func(t *testing.T) {
 
-		expectedResult := createSicepatCalculation(t, distanceTest, dimensionTest, 0)
+			result := Sicepat.CalculateTimeOfArrival(testCase.distance)
 
-		if result != expectedResult {
-			t.Errorf("get error must price is: %v and %v", result, expectedResult)
-		}
-	})
+			expectedResultTime := createSicepatTimeArrival(t, testCase.distance)
 
-	t.Run("test time of arrival", func(t *testing.T) {
-		Sicepat := provider.NewSicepatCalculation(provider.Sicepat{
-			Price:           20000,
-			HourPerDistance: 200,
-			KmPerDistance:   300,
+			if result != expectedResultTime {
+				t.Errorf("must be not error but get result time: %v, end expected: %v", result, expectedResultTime)
+			}
 		})
+	}
 
-		result := Sicepat.CalculateTimeOfArrival(distanceTest)
+	t.Run("when distance return an hour", func(t *testing.T) {
+		result := Sicepat.CalculateTimeOfArrival(90)
 
-		expectedResultTime := createSicepatTimeArrival(t, distanceTest)
-
-		if result != expectedResultTime {
-			t.Errorf("must be not error but get result time: %v, end expected: %v", result, expectedResultTime)
-		}
-	})
-
-	t.Run("test failed or direction", func(t *testing.T) {
-		Sicepat := provider.NewSicepatCalculation(provider.Sicepat{
-			Price:           20000,
-			HourPerDistance: 200,
-			KmPerDistance:   300,
-		})
-
-		result := Sicepat.CalculateTimeOfArrival(distanceTest)
-
-		expectedResultTime := createSicepatTimeArrival(t, 3)
-
-		if result != expectedResultTime {
-			t.Errorf("must be not error but get result time: %v, end expected: %v", result, expectedResultTime)
+		if result != (1) {
+			t.Errorf("error time is must one hour get %v", result)
 		}
 	})
 }

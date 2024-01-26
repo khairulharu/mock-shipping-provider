@@ -6,33 +6,35 @@ import (
 )
 
 type Sicepat struct {
-	Price           int64
-	HourPerDistance int64
-	KmPerDistance   int64
+	Rate primitive.Rate
 }
 
-func NewSicepatCalculation(sicepatProvider Sicepat) repository.ProviderCalculation {
+func NewSicepatCalculation(sicepatRate *primitive.Rate) repository.ProviderCalculation {
 	return &Sicepat{
-		Price:           sicepatProvider.Price,
-		HourPerDistance: sicepatProvider.HourPerDistance,
-		KmPerDistance:   sicepatProvider.KmPerDistance,
+		Rate: primitive.Rate{
+			PerKilogram:      sicepatRate.PerKilogram,
+			PerKilometer:     sicepatRate.PerKilometer,
+			PerCmCubic:       sicepatRate.PerCmCubic,
+			KilometerPerHour: sicepatRate.KilometerPerHour,
+		},
 	}
 }
 
 func (sicepat *Sicepat) CalculatePrice(distance float64, dimension primitive.Dimension, weight float64) int64 {
 	volume := dimension.Width * dimension.Height * dimension.Depth
 
-	var hops int64
+	distanceCost := distance * float64(sicepat.Rate.PerKilometer)
 
-	if distance < 1 {
-		hops = 1
-	} else {
-		hops = int64(distance) / sicepat.KmPerDistance
-	}
+	weightCost := weight * float64(sicepat.Rate.PerKilogram)
 
-	return sicepat.Price * hops * int64(volume)
+	volumeCost := volume * float64(sicepat.Rate.PerCmCubic)
+
+	return int64(distanceCost + weightCost + volumeCost)
 }
 
 func (sicepat *Sicepat) CalculateTimeOfArrival(distance float64) int64 {
-	return int64(distance) / sicepat.HourPerDistance
+	if distance < float64(sicepat.Rate.KilometerPerHour) {
+		return 1
+	}
+	return int64(distance) / sicepat.Rate.KilometerPerHour
 }

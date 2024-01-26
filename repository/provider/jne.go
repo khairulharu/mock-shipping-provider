@@ -6,18 +6,17 @@ import (
 )
 
 type JNE struct {
-	RatePerKilogram  int64
-	RatePerKilometer int64
-	RatePerCmCubic   int64
-	KilometerPerHour int64
+	Rate primitive.Rate
 }
 
-func NewJneCalculation() repository.ProviderCalculation {
+func NewJneCalculation(jneRate *primitive.Rate) repository.ProviderCalculation {
 	return &JNE{
-		RatePerKilogram:  3120,
-		RatePerKilometer: 4150,
-		RatePerCmCubic:   1245,
-		KilometerPerHour: 60,
+		Rate: primitive.Rate{
+			PerKilogram:      jneRate.PerKilogram,
+			PerKilometer:     jneRate.PerKilometer,
+			PerCmCubic:       jneRate.PerCmCubic,
+			KilometerPerHour: jneRate.KilometerPerHour,
+		},
 	}
 }
 
@@ -25,19 +24,19 @@ func (jne *JNE) CalculatePrice(distance float64, dimension primitive.Dimension, 
 
 	volume := dimension.Width * dimension.Height * dimension.Depth
 
-	distanceCost := distance * float64(jne.RatePerKilometer)
+	distanceCost := distance * float64(jne.Rate.PerKilometer)
 
-	weightCost := weight * float64(jne.RatePerKilogram)
+	weightCost := weight * float64(jne.Rate.PerKilogram)
 
-	volumeCost := volume * float64(jne.RatePerCmCubic)
+	volumeCost := volume * float64(jne.Rate.PerCmCubic)
 
 	return int64(distanceCost + weightCost + volumeCost)
 }
 
 func (jne *JNE) CalculateTimeOfArrival(distance float64) int64 {
-	if int64(distance) < jne.KilometerPerHour {
+	if int64(distance) < jne.Rate.KilometerPerHour {
 		return 1
 	}
 
-	return int64(distance) / jne.KilometerPerHour
+	return int64(distance) / jne.Rate.KilometerPerHour
 }
