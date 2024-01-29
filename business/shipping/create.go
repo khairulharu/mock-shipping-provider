@@ -6,6 +6,7 @@ import (
 
 	"mock-shipping-provider/business"
 	"mock-shipping-provider/primitive"
+	"mock-shipping-provider/repository"
 )
 
 // Create handle the business logic for
@@ -13,6 +14,19 @@ import (
 func (d *Dependency) Create(ctx context.Context, request business.CreateRequest) (business.CreateResponse, error) {
 	// validate the request
 	if err := ValidateCreateRequest(request); err != nil {
+		return business.CreateResponse{}, err
+	}
+
+	rpeo
+
+	if request.Provider.String() == "JNE" {
+	}
+
+	distance, isValid := d.distanceCalculation.Calculate()
+
+	orderHistory, err := d.orderLogRepository.Get(ctx, "reference_number", "airwaybill")
+
+	if err := d.orderLogRepository.Create(ctx, repository.LogEntry{}); err != nil {
 		return business.CreateResponse{}, err
 	}
 
