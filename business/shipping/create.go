@@ -7,6 +7,7 @@ import (
 	"mock-shipping-provider/business"
 	"mock-shipping-provider/primitive"
 	"mock-shipping-provider/repository"
+	"mock-shipping-provider/repository/provider"
 )
 
 // Create handle the business logic for
@@ -17,19 +18,84 @@ func (d *Dependency) Create(ctx context.Context, request business.CreateRequest)
 		return business.CreateResponse{}, err
 	}
 
-	rpeo
-
-	if request.Provider.String() == "JNE" {
+	response := business.CreateResponse{
+		ReferenceNumber: request.Sender.Name,
+		AirWaybill:      request.Sender.PhoneNumber,
 	}
 
-	distance, isValid := d.distanceCalculation.Calculate()
+	distance, isServiceable := d.distanceCalculation.Calculate(request.Sender.Coordinate, request.Recipient.Coordinate)
+	if !isServiceable {
+		return business.CreateResponse{}, business.ErrNotServiceable
+	}
 
-	orderHistory, err := d.orderLogRepository.Get(ctx, "reference_number", "airwaybill")
+	if request.Provider == primitive.ProviderJNE {
 
-	if err := d.orderLogRepository.Create(ctx, repository.LogEntry{}); err != nil {
+		JNE := provider.NewJneCalculation(&primitive.Rate{
+			PerKilogram:      200,
+			PerKilometer:     300,
+			PerCmCubic:       400,
+			KilometerPerHour: 60,
+		})
+
+		response.Price = JNE.CalculatePrice(distance, request.Dimension, request.Weight)
+		response.Hours = uint64(JNE.CalculateTimeOfArrival(distance))
+	}
+
+	if request.Provider == primitive.ProviderJNT {
+
+		JNT := provider.NewJntCalculation(&primitive.Rate{
+			PerKilogram:      200,
+			PerKilometer:     300,
+			PerCmCubic:       400,
+			KilometerPerHour: 60,
+		})
+
+		response.Price = JNT.CalculatePrice(distance, request.Dimension, request.Weight)
+		response.Hours = uint64(JNT.CalculateTimeOfArrival(distance))
+	}
+
+	if request.Provider == primitive.ProviderSiCepat {
+
+		SiCepat := provider.NewSicepatCalculation(&primitive.Rate{
+			PerKilogram:      200,
+			PerKilometer:     300,
+			PerCmCubic:       400,
+			KilometerPerHour: 60,
+		})
+
+		response.Price = SiCepat.CalculatePrice(distance, request.Dimension, request.Weight)
+		response.Hours = uint64(SiCepat.CalculateTimeOfArrival(distance))
+	}
+
+	if request.Provider == primitive.ProviderAnterAja {
+
+		AnterAja := provider.NewAnterajaCalculation(&primitive.Rate{
+			PerKilogram:      200,
+			PerKilometer:     300,
+			PerCmCubic:       400,
+			KilometerPerHour: 60,
+		})
+
+		response.Price = AnterAja.CalculatePrice(distance, request.Dimension, request.Weight)
+		response.Hours = uint64(AnterAja.CalculateTimeOfArrival(distance))
+	}
+
+	orderHistory, err := d.orderLogRepository.Get(ctx, response.ReferenceNumber, response.AirWaybill)
+	if err != nil {
 		return business.CreateResponse{}, err
 	}
 
+	orderLog := repository.LogEntry{
+		ReferenceNumber: response.ReferenceNumber,
+		AirWaybill:      response.AirWaybill,
+		History:         orderHistory,
+	}
+
+	if err := d.orderLogRepository.Create(ctx, orderLog); err != nil {
+		return business.CreateResponse{}, err
+	}
+
+	return response, nil
 }
 
 func ValidateCreateRequest(request business.CreateRequest) *business.RequestValidationError {
