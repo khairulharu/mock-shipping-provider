@@ -1,9 +1,6 @@
 package shipping
 
 import (
-	"context"
-
-	"mock-shipping-provider/business"
 	"mock-shipping-provider/repository"
 )
 
@@ -11,21 +8,16 @@ type Dependency struct {
 	orderLogRepository  repository.OrderLogRepository
 	webhookClient       repository.WebhookClient
 	distanceCalculation repository.DistanceCalculation
-	// priceCalculation    repository.PriceCalculation
+	providerCalculatoin repository.ProviderCalculation
 }
 
-// TODO: move these into different file and implement them
-func (d *Dependency) StatusHistory(ctx context.Context, request business.StatusRequest) (business.StatusHistoryResponse, error) {
-	// TODO implement me
-	panic("implement me")
-}
-
-func NewShippingService(orderLogRepository repository.OrderLogRepository, webhookClient repository.WebhookClient) (*Dependency, error) {
+func NewShippingService(orderLogRepository repository.OrderLogRepository, webhookClient repository.WebhookClient,
+	distanceCalculation repository.DistanceCalculation, providerCalculation repository.ProviderCalculation) (*Dependency, error) {
 	// TODO: make sure orderLogRepository and webhookClient is not nil. If they are, return an error
 	return &Dependency{
 		orderLogRepository:  orderLogRepository,
 		webhookClient:       webhookClient,
-		distanceCalculation: nil, // implement later
-		// priceCalculation:    nil,
+		distanceCalculation: distanceCalculation,
+		providerCalculatoin: providerCalculation,
 	}, nil
 }

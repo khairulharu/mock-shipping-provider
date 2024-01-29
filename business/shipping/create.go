@@ -16,8 +16,6 @@ func (d *Dependency) Create(ctx context.Context, request business.CreateRequest)
 		return business.CreateResponse{}, err
 	}
 
-	// TODO implement me
-	panic("implement me")
 }
 
 func ValidateCreateRequest(request business.CreateRequest) *business.RequestValidationError {
