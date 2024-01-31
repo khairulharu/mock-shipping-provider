@@ -81,7 +81,7 @@ func (d *Dependency) Create(ctx context.Context, request business.CreateRequest)
 	}
 
 	orderHistory, err := d.orderLogRepository.Get(ctx, response.ReferenceNumber, response.AirWaybill)
-	if err != nil {
+	if err != nil && orderHistory != nil {
 		return business.CreateResponse{}, err
 	}
 
