@@ -5,14 +5,14 @@ import (
 	"mock-shipping-provider/repository"
 )
 
-type ProviderAll struct {
+type Calculation struct {
 	JNE      repository.ProviderCalculation
 	JNT      repository.ProviderCalculation
 	SiCepat  repository.ProviderCalculation
 	AnterAja repository.ProviderCalculation
 }
 
-func GetProviderCalculation() (*ProviderAll, error) {
+func GetProviderCalculation() (*Calculation, error) {
 	jneRate := primitive.Rate{
 		PerKilogram:      700,
 		PerKilometer:     600,
@@ -20,7 +20,7 @@ func GetProviderCalculation() (*ProviderAll, error) {
 		KilometerPerHour: 60,
 	}
 	if err := jneRate.Validate(); err != nil {
-		return &ProviderAll{}, err
+		return &Calculation{}, err
 	}
 	jneCalculation := NewJneCalculation(&jneRate)
 
@@ -31,7 +31,7 @@ func GetProviderCalculation() (*ProviderAll, error) {
 		KilometerPerHour: 60,
 	}
 	if err := jntRate.Validate(); err != nil {
-		return &ProviderAll{}, err
+		return &Calculation{}, err
 	}
 	jntCalculation := NewJneCalculation(&jntRate)
 
@@ -42,7 +42,7 @@ func GetProviderCalculation() (*ProviderAll, error) {
 		KilometerPerHour: 60,
 	}
 	if err := anterajaRate.Validate(); err != nil {
-		return &ProviderAll{}, err
+		return &Calculation{}, err
 	}
 	anterajaCalculation := NewJneCalculation(&anterajaRate)
 
@@ -53,11 +53,11 @@ func GetProviderCalculation() (*ProviderAll, error) {
 		KilometerPerHour: 60,
 	}
 	if err := sicepatRate.Validate(); err != nil {
-		return &ProviderAll{}, err
+		return &Calculation{}, err
 	}
 	sicepatCalculation := NewJneCalculation(&sicepatRate)
 
-	return &ProviderAll{
+	return &Calculation{
 		JNE:      jneCalculation,
 		JNT:      jntCalculation,
 		SiCepat:  sicepatCalculation,
