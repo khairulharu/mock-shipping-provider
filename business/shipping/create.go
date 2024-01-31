@@ -7,7 +7,6 @@ import (
 	"mock-shipping-provider/business"
 	"mock-shipping-provider/primitive"
 	"mock-shipping-provider/repository"
-	"mock-shipping-provider/repository/provider"
 )
 
 // Create handle the business logic for
@@ -30,54 +29,26 @@ func (d *Dependency) Create(ctx context.Context, request business.CreateRequest)
 
 	if request.Provider == primitive.ProviderJNE {
 
-		JNE := provider.NewJneCalculation(&primitive.Rate{
-			PerKilogram:      200,
-			PerKilometer:     300,
-			PerCmCubic:       400,
-			KilometerPerHour: 60,
-		})
-
-		response.Price = JNE.CalculatePrice(distance, request.Dimension, request.Weight)
-		response.Hours = uint64(JNE.CalculateTimeOfArrival(distance))
+		response.Price = d.provider.JNE.CalculatePrice(distance, request.Dimension, request.Weight)
+		response.Hours = uint64(d.provider.JNE.CalculateTimeOfArrival(distance))
 	}
 
 	if request.Provider == primitive.ProviderJNT {
 
-		JNT := provider.NewJntCalculation(&primitive.Rate{
-			PerKilogram:      200,
-			PerKilometer:     300,
-			PerCmCubic:       400,
-			KilometerPerHour: 60,
-		})
-
-		response.Price = JNT.CalculatePrice(distance, request.Dimension, request.Weight)
-		response.Hours = uint64(JNT.CalculateTimeOfArrival(distance))
+		response.Price = d.provider.JNT.CalculatePrice(distance, request.Dimension, request.Weight)
+		response.Hours = uint64(d.provider.JNT.CalculateTimeOfArrival(distance))
 	}
 
 	if request.Provider == primitive.ProviderSiCepat {
 
-		SiCepat := provider.NewSicepatCalculation(&primitive.Rate{
-			PerKilogram:      200,
-			PerKilometer:     300,
-			PerCmCubic:       400,
-			KilometerPerHour: 60,
-		})
-
-		response.Price = SiCepat.CalculatePrice(distance, request.Dimension, request.Weight)
-		response.Hours = uint64(SiCepat.CalculateTimeOfArrival(distance))
+		response.Price = d.provider.SiCepat.CalculatePrice(distance, request.Dimension, request.Weight)
+		response.Hours = uint64(d.provider.SiCepat.CalculateTimeOfArrival(distance))
 	}
 
 	if request.Provider == primitive.ProviderAnterAja {
 
-		AnterAja := provider.NewAnterajaCalculation(&primitive.Rate{
-			PerKilogram:      200,
-			PerKilometer:     300,
-			PerCmCubic:       400,
-			KilometerPerHour: 60,
-		})
-
-		response.Price = AnterAja.CalculatePrice(distance, request.Dimension, request.Weight)
-		response.Hours = uint64(AnterAja.CalculateTimeOfArrival(distance))
+		response.Price = d.provider.AnterAja.CalculatePrice(distance, request.Dimension, request.Weight)
+		response.Hours = uint64(d.provider.AnterAja.CalculateTimeOfArrival(distance))
 	}
 
 	orderHistory, err := d.orderLogRepository.Get(ctx, response.ReferenceNumber, response.AirWaybill)
