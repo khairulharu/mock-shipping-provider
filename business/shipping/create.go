@@ -3,6 +3,7 @@ package shipping
 import (
 	"context"
 	"strconv"
+	"time"
 
 	"mock-shipping-provider/business"
 	"mock-shipping-provider/primitive"
@@ -66,6 +67,17 @@ func (d *Dependency) Create(ctx context.Context, request business.CreateRequest)
 		return business.CreateResponse{}, err
 	}
 
+	orderStatusUpdate := repository.StatusUpdate{
+		ReferenceNumber: response.ReferenceNumber,
+		AirWaybill:      response.AirWaybill,
+		Status:          primitive.StatusInTransit,
+		Timestamp:       time.Now(),
+		Note:            "on status",
+	}
+
+	if err := d.webhookClient.SendStatusUpdate(ctx, orderStatusUpdate); err != nil {
+		return business.CreateResponse{}, err
+	}
 	return response, nil
 }
 
