@@ -9,11 +9,11 @@ type Dependency struct {
 	orderLogRepository  repository.OrderLogRepository
 	webhookClient       repository.WebhookClient
 	distanceCalculation repository.DistanceCalculation
-	provider            provider.ProviderAll
+	provider            provider.Calculation
 }
 
 func NewShippingService(orderLogRepository repository.OrderLogRepository, webhookClient repository.WebhookClient, distanceCalculation repository.DistanceCalculation,
-	provider provider.ProviderAll) (*Dependency, error) {
+	provider provider.Calculation) (*Dependency, error) {
 	// TODO: make sure orderLogRepository and webhookClient is not nil. If they are, return an error
 	return &Dependency{
 		orderLogRepository:  orderLogRepository,
