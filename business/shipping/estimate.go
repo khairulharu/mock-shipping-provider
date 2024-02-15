@@ -7,8 +7,45 @@ import (
 )
 
 func (d *Dependency) Estimate(ctx context.Context, request business.EstimateRequest) ([]business.EstimateResult, error) {
-	// TODO implement me
-	panic("implement me")
+	if err := ValidateEstimateRequest(request); err != nil {
+		return []business.EstimateResult{}, err
+	}
+
+	distance, isServiceable := d.distanceCalculation.Calculate(request.Sender, request.Recipient)
+	if !isServiceable {
+		return []business.EstimateResult{}, business.ErrNotServiceable
+	}
+
+	jneCalculation := business.EstimateResult{
+		Provider: primitive.ProviderJNE,
+		Price:    d.provider.JNE.CalculatePrice(distance, request.Dimension, request.Weight),
+		Hours:    uint64(d.provider.JNE.CalculateTimeOfArrival(distance)),
+	}
+
+	jntCalculation := business.EstimateResult{
+		Provider: primitive.ProviderJNT,
+		Price:    d.provider.JNT.CalculatePrice(distance, request.Dimension, request.Weight),
+		Hours:    uint64(d.provider.JNT.CalculateTimeOfArrival(distance)),
+	}
+
+	siCepatCalculation := business.EstimateResult{
+		Provider: primitive.ProviderSiCepat,
+		Price:    d.provider.SiCepat.CalculatePrice(distance, request.Dimension, request.Weight),
+		Hours:    uint64(d.provider.SiCepat.CalculateTimeOfArrival(distance)),
+	}
+
+	anterAjaCalculation := business.EstimateResult{
+		Provider: primitive.ProviderAnterAja,
+		Price:    d.provider.AnterAja.CalculatePrice(distance, request.Dimension, request.Weight),
+		Hours:    uint64(d.provider.AnterAja.CalculateTimeOfArrival(distance)),
+	}
+
+	return []business.EstimateResult{
+		jneCalculation,
+		jntCalculation,
+		siCepatCalculation,
+		anterAjaCalculation,
+	}, nil
 }
 
 // ValidateEstimateRequest handle an action to
