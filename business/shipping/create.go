@@ -57,6 +57,12 @@ func (d *Dependency) Create(ctx context.Context, request business.CreateRequest)
 		return business.CreateResponse{}, err
 	}
 
+	orderHistory = append(orderHistory, repository.OrderHistory{
+		StatusCode: primitive.StatusOrderPlaced,
+		Timestamp:  time.Now(),
+		Note:       "on Status",
+	})
+
 	orderLog := repository.LogEntry{
 		ReferenceNumber: response.ReferenceNumber,
 		AirWaybill:      response.AirWaybill,
