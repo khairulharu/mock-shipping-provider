@@ -24,6 +24,5 @@ func (o *orderLogRepository) Create(ctx context.Context, logEntry repository.Log
 			log.Err(err).Msg("returning connection back to pool")
 		}
 	}()
-
 	return nil
 }
